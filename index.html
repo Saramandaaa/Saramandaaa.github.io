@@ -172,7 +172,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>@<a href="%E7%9B%AE%E5%BD%95">TOC</a><br>学习资料来源：<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">LearnOpenGL CN</a></p>
+        <!-- TOC -->autoauto- [OpenGL简介](#opengl简介)auto    - [OpenGL是什么](#opengl是什么)auto    - [立即渲染模式与核心模式](#立即渲染模式与核心模式)auto    - [OpenGL实现：状态机](#opengl实现状态机)auto- [使用GLFW创建窗口](#使用glfw创建窗口)auto    - [使用GLAD获取OpenGL函数地址](#使用glad获取opengl函数地址)auto    - [创建窗口](#创建窗口)auto        - [一些常用回调函数](#一些常用回调函数)auto    - [渲染循环](#渲染循环)auto        - [双缓冲](#双缓冲)auto- [渲染管线（Pipeline）](#渲染管线pipeline)autoauto<!-- /TOC -->
+
+<p>学习资料来源：<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">LearnOpenGL CN</a></p>
 <h1 id="OpenGL简介"><a href="#OpenGL简介" class="headerlink" title="OpenGL简介"></a>OpenGL简介</h1><h2 id="OpenGL是什么"><a href="#OpenGL是什么" class="headerlink" title="OpenGL是什么"></a>OpenGL是什么</h2><p>一般它被认为是一个API(Application Programming Interface, 应用程序编程接口)，包含了一系列可以操作图形、图像的函数。然而，OpenGL本身并不是一个API，它仅仅是一个由Khronos组织制定并维护的规范(Specification)。</p>
 <p>OpenGL规范严格规定了每个函数该如何执行，以及它们的输出值。至于内部具体每个函数是如何实现(Implement)的，将由OpenGL库的开发者自行决定（译注：这里开发者是指编写OpenGL库的人）。因为OpenGL规范并没有规定实现的细节，具体的OpenGL库允许使用不同的实现，只要其功能和结果与规范相匹配（亦即，作为用户不会感受到功能上的差异）。</p>
 <p>实际的OpenGL库的开发者通常是显卡的生产商。你购买的显卡所支持的OpenGL版本都为这个系列的显卡专门开发的。当你使用Apple系统的时候，OpenGL库是由Apple自身维护的。在Linux下，有显卡生产商提供的OpenGL库，也有一些爱好者改编的版本。这也意味着任何时候OpenGL库表现的行为与规范规定的不一致时，基本都是库的开发者留下的bug。</p>
@@ -181,7 +183,7 @@
 <h2 id="OpenGL实现：状态机"><a href="#OpenGL实现：状态机" class="headerlink" title="OpenGL实现：状态机"></a>OpenGL实现：状态机</h2><p>OpenGL自身是一个巨大的状态机(State Machine)：一系列的变量描述OpenGL此刻应当如何运行。OpenGL的状态通常被称为OpenGL上下文(Context)。我们通常使用如下途径去更改OpenGL状态：设置选项，操作缓冲。最后，我们使用当前OpenGL上下文来渲染。</p>
 <p>假设当我们想告诉OpenGL去画线段而不是三角形的时候，我们通过改变一些上下文变量来改变OpenGL状态，从而告诉OpenGL如何去绘图。一旦我们改变了OpenGL的状态为绘制线段，下一个绘制命令就会画出线段而不是三角形。</p>
 <p>当使用OpenGL的时候，我们会遇到一些状态设置函数(State-changing Function)，这类函数将会改变上下文。以及状态使用函数(State-using Function)，这类函数会根据当前OpenGL的状态执行一些操作。只要你记住OpenGL本质上是个大状态机，就能更容易理解它的大部分特性。</p>
-<p>$<del>$<br>$</del>$</p>
+<p>&amp;nbsp<br>&amp;nbsp</p>
 <h1 id="使用GLFW创建窗口"><a href="#使用GLFW创建窗口" class="headerlink" title="使用GLFW创建窗口"></a>使用GLFW创建窗口</h1><p>在<a target="_blank" rel="noopener" href="https://www.glfw.org/download.html">官网</a>下载源码，在本地使用CMake编译、生成即可。</p>
 <h2 id="使用GLAD获取OpenGL函数地址"><a href="#使用GLAD获取OpenGL函数地址" class="headerlink" title="使用GLAD获取OpenGL函数地址"></a>使用GLAD获取OpenGL函数地址</h2><p>为OpenGL只是一个标准/规范，具体的实现是由驱动开发商针对特定显卡实现的。由于OpenGL驱动版本众多，它大多数函数的位置都无法在编译时确定下来，需要在运行时查询。有些库能简化此过程，其中GLAD是目前最新，也是最流行的库。</p>
 <p>打开GLAD的<a target="_blank" rel="noopener" href="https://glad.dav1d.de/">在线服务</a>，将语言(Language)设置为C/C++，在API选项中，选择3.3以上的OpenGL(gl)版本（我们的教程中将使用3.3版本，但更新的版本也能正常工作）。之后将模式(Profile)设置为Core，并且保证生成加载器(Generate a loader)的选项是选中的。现在可以先（暂时）忽略拓展(Extensions)中的内容。都选择完之后，点击生成(Generate)按钮来生成库文件。</p>
@@ -206,7 +208,8 @@
 <li><code>glClear</code>函数将会把指定缓冲中的颜色全部改为<code>glClearColor</code>中设定的颜色（RGBA）。对于OpenGL状态机来说，<code>glClearColor</code>函数是一个状态设置函数，而<code>glClear</code>函数则是一个状态使用的函数，它使用了当前的状态来获取应该清除为的颜色。</li>
 </ul>
 <h3 id="双缓冲"><a href="#双缓冲" class="headerlink" title="双缓冲"></a>双缓冲</h3><p>应用程序使用单缓冲绘图时可能会存在图像闪烁的问题。 这是因为生成的图像不是一下子被绘制出来的，而是按照从左到右，由上而下逐像素地绘制而成的。最终图像不是在瞬间显示给用户，而是通过一步一步生成的，这会导致渲染的结果很不真实。为了规避这些问题，我们应用双缓冲渲染窗口应用程序。前缓冲保存着最终输出的图像，它会在屏幕上显示；而所有的的渲染指令都会在后缓冲上绘制。当所有的渲染指令执行完毕后，我们交换(Swap)前缓冲和后缓冲，这样图像就立即呈显出来，之前提到的不真实感就消除了。</p>
-<p>至此，窗口创建完成。<img src="https://img-blog.csdnimg.cn/20210111145057585.png#pic_center"><br>$<del>$<br>$</del>$</p>
+<p>至此，窗口创建完成。<br><img src="https://img-blog.csdnimg.cn/20210111145057585.png#pic_center"></p>
+<p>&amp;nbsp<br>&amp;nbsp</p>
 <h1 id="渲染管线（Pipeline）"><a href="#渲染管线（Pipeline）" class="headerlink" title="渲染管线（Pipeline）"></a>渲染管线（Pipeline）</h1>
       
 
