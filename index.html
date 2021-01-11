@@ -172,17 +172,15 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- TOC -->
-
-<ul>
-<li><a href="#opengl%E7%AE%80%E4%BB%8B">OpenGL简介</a><ul>
-<li><a href="#opengl%E6%98%AF%E4%BB%80%E4%B9%88">OpenGL是什么</a></li>
+        <ul>
+<li><a href="#OpenGL%E7%AE%80%E4%BB%8B">OpenGL简介</a><ul>
+<li><a href="#OpenGL%E6%98%AF%E4%BB%80%E4%B9%88">OpenGL是什么</a></li>
 <li><a href="#%E7%AB%8B%E5%8D%B3%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%BC%8F">立即渲染模式与核心模式</a></li>
-<li><a href="#opengl%E5%AE%9E%E7%8E%B0%E7%8A%B6%E6%80%81%E6%9C%BA">OpenGL实现：状态机</a></li>
+<li><a href="#OpenGL%E5%AE%9E%E7%8E%B0%EF%BC%9A%E7%8A%B6%E6%80%81%E6%9C%BA">OpenGL实现：状态机</a></li>
 </ul>
 </li>
-<li><a href="#%E4%BD%BF%E7%94%A8glfw%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3">使用GLFW创建窗口</a><ul>
-<li><a href="#%E4%BD%BF%E7%94%A8glad%E8%8E%B7%E5%8F%96opengl%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80">使用GLAD获取OpenGL函数地址</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8GLFW%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3">使用GLFW创建窗口</a><ul>
+<li><a href="#%E4%BD%BF%E7%94%A8GLAD%E8%8E%B7%E5%8F%96OpenGL%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80">使用GLAD获取OpenGL函数地址</a></li>
 <li><a href="#%E5%88%9B%E5%BB%BA%E7%AA%97%E5%8F%A3">创建窗口</a><ul>
 <li><a href="#%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">一些常用回调函数</a></li>
 </ul>
@@ -193,10 +191,8 @@
 </li>
 </ul>
 </li>
-<li><a href="#%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BFpipeline">渲染管线（Pipeline）</a></li>
+<li><a href="#%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%EF%BC%88Pipeline%EF%BC%89">渲染管线（Pipeline）</a></li>
 </ul>
-<!-- /TOC -->
-
 <p>学习资料来源：<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">LearnOpenGL CN</a></p>
 <h1 id="OpenGL简介"><a href="#OpenGL简介" class="headerlink" title="OpenGL简介"></a>OpenGL简介</h1><h2 id="OpenGL是什么"><a href="#OpenGL是什么" class="headerlink" title="OpenGL是什么"></a>OpenGL是什么</h2><p>一般它被认为是一个API(Application Programming Interface, 应用程序编程接口)，包含了一系列可以操作图形、图像的函数。然而，OpenGL本身并不是一个API，它仅仅是一个由Khronos组织制定并维护的规范(Specification)。</p>
 <p>OpenGL规范严格规定了每个函数该如何执行，以及它们的输出值。至于内部具体每个函数是如何实现(Implement)的，将由OpenGL库的开发者自行决定（译注：这里开发者是指编写OpenGL库的人）。因为OpenGL规范并没有规定实现的细节，具体的OpenGL库允许使用不同的实现，只要其功能和结果与规范相匹配（亦即，作为用户不会感受到功能上的差异）。</p>
