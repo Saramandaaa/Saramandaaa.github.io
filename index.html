@@ -278,7 +278,28 @@
 <p>你的标准化设备坐标接着会变换为屏幕空间坐标(Screen-space Coordinates)，这是使用你通过<code>glViewport</code>函数提供的数据，进行视口变换(Viewport Transform)完成的。所得的屏幕空间坐标又会被变换为片段输入到片段着色器中。</p>
 <h2 id="2D渲染代码实现"><a href="#2D渲染代码实现" class="headerlink" title="2D渲染代码实现"></a>2D渲染代码实现</h2><p>定义需要渲染的顶点数据：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//三角形三个角的坐标(x,y,z)</span></span><br><span class="line"><span class="keyword">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,</span><br><span class="line">     <span class="number">0.0f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>目前是在平面上渲染，则不用考虑z坐标，将z坐标设为0。</p>
+<p>目前是在平面上渲染，则不用考虑z坐标，将z坐标设为0。暂且不考虑在顶点着色器中进行坐标变换，因此直接使用NDC。</p>
+<h3 id="顶点缓冲对象（VBO）"><a href="#顶点缓冲对象（VBO）" class="headerlink" title="顶点缓冲对象（VBO）"></a>顶点缓冲对象（VBO）</h3><p>定义这样的顶点数据以后，我们会把它作为输入发送给图形渲染管线的第一个处理阶段：顶点着色器。它会在GPU上创建内存用于储存我们的顶点数据，还要配置OpenGL如何解释这些内存，并且指定其如何发送给显卡。顶点着色器接着会处理我们在内存中指定数量的顶点。</p>
+<p>我们通过顶点缓冲对象(Vertex Buffer Objects, VBO)管理这个内存，它会在GPU内存（通常被称为显存）中储存大量顶点。使用这些缓冲对象的好处是我们可以一次性的发送一大批数据到显卡上，而不是每个顶点发送一次。当数据发送至显卡的内存中后，顶点着色器几乎能立即访问顶点，这是个非常快的过程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义一个VBO</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> VBO;</span><br><span class="line">glGenBuffers(<span class="number">1</span>, &amp;VBO); </span><br><span class="line"></span><br><span class="line"><span class="comment">//将该VBO绑定到GL_ARRAY_BUFFER这个类型的缓冲上</span></span><br><span class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);</span><br><span class="line"></span><br><span class="line"><span class="comment">//将数据发送到缓冲</span></span><br><span class="line">glBufferData(GL_ARRAY_BUFFER, <span class="keyword">sizeof</span>(vertices), vertices, GL_STATIC_DRAW);</span><br><span class="line"></span><br><span class="line"><span class="comment">//告诉OpenGL如何解释顶点数据</span></span><br><span class="line">glVertexAttribPointer(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">3</span> * <span class="keyword">sizeof</span>(<span class="keyword">float</span>), (<span class="keyword">void</span>*)<span class="number">0</span>);</span><br><span class="line">glEnableVertexAttribArray(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>OpenGL有很多缓冲对象类型，顶点缓冲对象的缓冲类型是GL_ARRAY_BUFFER。OpenGL允许我们同时绑定多个缓冲，只要它们是不同的缓冲类型。</li>
+<li><code>glBufferData</code>是一个专门用来把用户定义的数据复制到当前绑定缓冲的函数。它的第一个参数是目标缓冲的类型：顶点缓冲对象当前绑定到GL_ARRAY_BUFFER目标上。第二个参数指定传输数据的大小(以字节为单位)；用一个简单的sizeof计算出顶点数据大小就行。第三个参数是我们希望发送的实际数据。</li>
+<li><code>glVertexAttribPointer</code>函数告诉OpenGL该如何解析顶点数据。</li>
+</ul>
+<p>顶点数据可以以我们想要的方式放在数组中传递给缓冲，因此我们需要告诉OpenGL如何解释顶点数据。这是我们的数据解释方式：</p>
+<p><img src="https://i.loli.net/2021/01/12/pa3xJ8Q6gsTfmuF.png#pic_center"></p>
+<p>该函数的参数列表如下</p>
+<ul>
+<li>第一个参数指定我们要配置的顶点属性的编号，与下一句中<code>glEnableVertexAttribArray</code>的参数相匹配，表示我们配置的是编号为0的顶点属性。</li>
+<li>第二个参数指定顶点属性的大小。顶点属性是一个<code>vec3</code>，它由3个值组成，所以大小是3。</li>
+<li>第三个参数指定数据的类型，这里是<code>GL_FLOAT</code>(GLSL中<code>vec*</code>都是由浮点数值组成的)。</li>
+<li>下个参数定义我们是否希望数据被标准化(Normalize)。如果我们设置为<code>GL_TRUE</code>，所有数据都会被映射到0（对于有符号型<code>signed</code>数据是-1）到1之间。我们把它设置为<code>GL_FALSE</code>。</li>
+<li>第五个参数叫做步长(Stride)，简单说就是从这个属性第二次出现的地方到整个数组0位置之间有多少字节，因此设置为<code>3 * sizeof(float)</code>。</li>
+<li>最后一个参数的类型是<code>void*</code>，所以需要我们进行这个奇怪的强制类型转换。它表示位置数据在缓冲中起始位置的偏移量(Offset)。由于位置数据在数组的开头，所以这里是0。</li>
+</ul>
+<p>配置完之后使用<code>glEnableVertexAttribArray</code>启用0号顶点属性。</p>
+<h3 id="顶点数组对象（VAO）"><a href="#顶点数组对象（VAO）" class="headerlink" title="顶点数组对象（VAO）"></a>顶点数组对象（VAO）</h3><p>顶点数组对象(Vertex Array Object, VAO)</p>
 
       
 
