@@ -43,7 +43,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="" class="js-avatar">
+			<img src="https://sm.ms/image/YwiRNjrP2sthqFc" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/"></a></h1>
@@ -77,13 +77,9 @@
 		<nav class="header-nav">
 			<div class="social">
 				
-					<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+					<a class="github" target="_blank" href="https://github.com/Saramandaaa" title="github"><i class="icon-github"></i></a>
 		        
-					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-		        
-					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-		        
-					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+					<a class="bilibili" target="_blank" href="https://space.bilibili.com/94907115" title="bilibili"><i class="icon-bilibili"></i></a>
 		        
 			</div>
 		</nav>
@@ -101,7 +97,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="" class="js-avatar">
+				<img src="https://sm.ms/image/YwiRNjrP2sthqFc" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author"></h1>
@@ -118,13 +114,9 @@
 			<nav class="header-nav">
 				<div class="social">
 					
-						<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+						<a class="github" target="_blank" href="https://github.com/Saramandaaa" title="github"><i class="icon-github"></i></a>
 			        
-						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-			        
-						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-			        
-						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+						<a class="bilibili" target="_blank" href="https://space.bilibili.com/94907115" title="bilibili"><i class="icon-bilibili"></i></a>
 			        
 				</div>
 			</nav>
@@ -172,7 +164,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ul>
+        <p>学习资料来源：<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">LearnOpenGL CN</a></p>
+<ul>
 <li><a href="#OpenGL%E7%AE%80%E4%BB%8B">OpenGL简介</a><ul>
 <li><a href="#OpenGL%E6%98%AF%E4%BB%80%E4%B9%88">OpenGL是什么</a></li>
 <li><a href="#%E7%AB%8B%E5%8D%B3%E6%B8%B2%E6%9F%93%E6%A8%A1%E5%BC%8F%E4%B8%8E%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%BC%8F">立即渲染模式与核心模式</a></li>
@@ -193,7 +186,6 @@
 </li>
 <li><a href="#%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF%EF%BC%88Pipeline%EF%BC%89">渲染管线（Pipeline）</a></li>
 </ul>
-<p>学习资料来源：<a target="_blank" rel="noopener" href="https://learnopengl-cn.github.io/">LearnOpenGL CN</a></p>
 <h1 id="OpenGL简介"><a href="#OpenGL简介" class="headerlink" title="OpenGL简介"></a>OpenGL简介</h1><h2 id="OpenGL是什么"><a href="#OpenGL是什么" class="headerlink" title="OpenGL是什么"></a>OpenGL是什么</h2><p>一般它被认为是一个API(Application Programming Interface, 应用程序编程接口)，包含了一系列可以操作图形、图像的函数。然而，OpenGL本身并不是一个API，它仅仅是一个由Khronos组织制定并维护的规范(Specification)。</p>
 <p>OpenGL规范严格规定了每个函数该如何执行，以及它们的输出值。至于内部具体每个函数是如何实现(Implement)的，将由OpenGL库的开发者自行决定（译注：这里开发者是指编写OpenGL库的人）。因为OpenGL规范并没有规定实现的细节，具体的OpenGL库允许使用不同的实现，只要其功能和结果与规范相匹配（亦即，作为用户不会感受到功能上的差异）。</p>
 <p>实际的OpenGL库的开发者通常是显卡的生产商。你购买的显卡所支持的OpenGL版本都为这个系列的显卡专门开发的。当你使用Apple系统的时候，OpenGL库是由Apple自身维护的。在Linux下，有显卡生产商提供的OpenGL库，也有一些爱好者改编的版本。这也意味着任何时候OpenGL库表现的行为与规范规定的不一致时，基本都是库的开发者留下的bug。</p>
