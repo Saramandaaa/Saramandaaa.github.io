@@ -21,8 +21,9 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/12/pa3xJ8Q6gsTfmuF.png#pic_center">
 <meta property="og:image" content="https://i.loli.net/2021/01/13/Y2VS8f9ntmyvhQk.png#pic_center">
 <meta property="og:image" content="https://i.loli.net/2021/01/13/zIBpiYXFW9d8qhT.png">
+<meta property="og:image" content="https://i.loli.net/2021/02/22/jZxavHK1uEQIXsT.png">
 <meta property="article:published_time" content="2021-01-11T09:24:31.000Z">
-<meta property="article:modified_time" content="2021-01-13T14:21:08.015Z">
+<meta property="article:modified_time" content="2021-02-22T09:17:58.879Z">
 <meta property="article:author" content="Saramandaaa">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="OpenGL">
@@ -215,6 +216,14 @@
 <li><a href="#%E7%B4%A2%E5%BC%95%E7%BC%93%E5%86%B2%E5%AF%B9%E8%B1%A1%EF%BC%88EBO%EF%BC%89">索引缓冲对象（EBO）</a></li>
 </ul>
 </li>
+<li><a href="#GLSL">GLSL</a><ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">数据类型</a></li>
+<li><a href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA">输入输出</a></li>
+<li><a href="#Uniform">Uniform</a></li>
+<li><a href="#%E6%9B%B4%E5%A4%9A%E9%A1%B6%E7%82%B9%E5%B1%9E%E6%80%A7">更多顶点属性</a></li>
+<li><a href="#%E8%87%AA%E5%B7%B1%E7%9A%84%E7%9D%80%E8%89%B2%E5%99%A8%E7%B1%BB">自己的着色器类</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -282,7 +291,7 @@
 </br>
 
 <h2 id="着色器（Shader）"><a href="#着色器（Shader）" class="headerlink" title="着色器（Shader）"></a>着色器（Shader）</h2><p>图形渲染管线可以被划分为几个阶段，每个阶段将会把前一个阶段的输出作为输入。所有这些阶段都是高度专门化的（它们都有一个特定的函数），并且很容易并行执行。正是由于它们具有并行执行的特性，当今大多数显卡都有成千上万的小处理核心，它们在GPU上为每一个（渲染管线）阶段运行各自的小程序，从而在图形渲染管线中快速处理你的数据。这些小程序叫做着色器(Shader)。</p>
-<p>有些着色器允许开发者自己配置，可以更细致地让我们控制图形渲染管线中的特定部分，而且因为它们运行在GPU上，所以它们可以给我们节约宝贵的CPU时间。OpenGL着色器是用OpenGL着色器语言(OpenGL Shading Language, GLSL)写成的</p>
+<p>有些着色器允许开发者自己配置，可以更细致地让我们控制图形渲染管线中的特定部分，而且因为它们运行在GPU上，所以它们可以给我们节约宝贵的CPU时间。OpenGL着色器是用<a href="#GLSL">OpenGL着色器语言</a>(OpenGL Shading Language, GLSL)写成的</p>
 <p>上图渲染管线中蓝色的三个部分可以由开发者进行自由编辑。</p>
 <h3 id="顶点着色器（Vertex-Shader）"><a href="#顶点着色器（Vertex-Shader）" class="headerlink" title="顶点着色器（Vertex Shader）"></a>顶点着色器（Vertex Shader）</h3><p>OpenGL没有提供默认的顶点着色器，必须由开发者完成编写。</p>
 <ul>
@@ -395,7 +404,118 @@
 <p>运行程序会获得下面这样的图片的结果。左侧图片看应该起来很熟悉，而右侧的则是使用线框模式(Wireframe Mode)绘制的。线框矩形可以显示出矩形的确是由两个三角形组成的。</p>
 <p><img src="https://i.loli.net/2021/01/13/zIBpiYXFW9d8qhT.png"></p>
 <p>要想用线框模式(Wireframe Mode)绘制你的三角形，你可以通过<code>glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)</code>函数配置OpenGL如何绘制图元。第一个参数表示我们打算将其应用到所有的三角形的正面和背面，第二个参数告诉我们用线来绘制。之后的绘制调用会一直以线框模式绘制三角形，直到我们用<code>glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)</code>将其设置回默认模式。</p>
+</br>
 
+<h2 id="GLSL"><a href="#GLSL" class="headerlink" title="GLSL"></a>GLSL</h2><p>着色器是使用一种叫GLSL的类C语言写成的。GLSL是为图形计算量身定制的，它包含一些针对向量和矩阵操作的有用特性。</p>
+<p>一个典型的着色器有下面的结构：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version version_number</span></span><br><span class="line"><span class="keyword">in</span> type in_variable_name;</span><br><span class="line"><span class="keyword">in</span> type in_variable_name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">out</span> type out_variable_name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">uniform</span> type uniform_name;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> main() &#123;</span><br><span class="line">  <span class="comment">// 处理输入并进行一些图形操作</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">// 输出处理过的结果到输出变量</span></span><br><span class="line">  out_variable_name = weird_stuff_we_processed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们特别谈论到顶点着色器的时候，每个输入变量也叫顶点属性(Vertex Attribute)。我们能声明的顶点属性是有上限的，它一般由硬件来决定。OpenGL确保至少有16个包含4分量的顶点属性可用，但是有些硬件或许允许更多的顶点属性，你可以查询<code>GL_MAX_VERTEX_ATTRIBS</code>来获取具体的上限：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> nrAttributes;</span><br><span class="line">glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &amp;nrAttributes);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Maximum nr of vertex attributes supported: &quot;</span> &lt;&lt; nrAttributes &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int</td>
+<td>整型</td>
+</tr>
+<tr>
+<td>float</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>double</td>
+<td>双精度浮点</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>布尔</td>
+</tr>
+<tr>
+<td>uint</td>
+<td>无符号整型</td>
+</tr>
+<tr>
+<td>vecn</td>
+<td>包含<code>n</code>个float分量的默认向量，例如<code>vec4</code>。<code>n</code>可以取2,3,4</td>
+</tr>
+<tr>
+<td>bvecn</td>
+<td>包含<code>n</code>个bool分量的向量</td>
+</tr>
+<tr>
+<td>ivecn</td>
+<td>包含<code>n</code>个int分量的向量</td>
+</tr>
+<tr>
+<td>uvecn</td>
+<td>包含<code>n</code>个uint分量的向量</td>
+</tr>
+<tr>
+<td>dvecn</td>
+<td>包含<code>n</code>个double分量的向量</td>
+</tr>
+<tr>
+<td>matn</td>
+<td><code>n</code>x<code>n</code>的浮点数矩阵</td>
+</tr>
+<tr>
+<td>sampler2D</td>
+<td>2D纹理</td>
+</tr>
+<tr>
+<td>samplerCube</td>
+<td>盒纹理</td>
+</tr>
+</tbody></table>
+</br>
+
+<p>同样，可以在GLSL中使用数组和结构体（与C语言类似），但是数组仅支持一维。</p>
+<p>一个向量的分量可以通过<code>vec.x</code>这种方式获取，这里<code>x</code>是指这个向量的第一个分量。你可以分别使用<code>.x</code>、<code>.y</code>、<code>.z</code>和<code>.w</code>来获取它们的第1、2、3、4个分量。GLSL也允许你对颜色使用<code>rgba</code>，或是对纹理坐标使用<code>stpq</code>访问相同的分量。</p>
+<p>向量这一数据类型也允许一些有趣而灵活的分量选择方式，叫做重组(Swizzling)。同样也可以灵活使用构造函数。GLSL允许这样的语法：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> someVec;</span><br><span class="line"><span class="type">vec4</span> differentVec = someVec.xyxx;</span><br><span class="line"><span class="type">vec3</span> anotherVec = differentVec.zyw;</span><br><span class="line"><span class="type">vec4</span> otherVec = someVec.xxxx + anotherVec.yxzy;</span><br><span class="line"><span class="type">vec2</span> vect = <span class="type">vec2</span>(<span class="number">0.5</span>, <span class="number">0.7</span>);</span><br><span class="line"><span class="type">vec4</span> result = <span class="type">vec4</span>(vect, <span class="number">0.0</span>, <span class="number">0.0</span>);</span><br><span class="line"><span class="type">vec4</span> otherResult = <span class="type">vec4</span>(result.xyz, <span class="number">1.0</span>);</span><br></pre></td></tr></table></figure>
+</br>
+
+<h3 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h3><p>虽然着色器是各自独立的小程序，但是它们都是一个整体的一部分，出于这样的原因，我们希望每个着色器都有输入和输出，这样才能进行数据交流和传递。GLSL定义了in和out关键字专门来实现这个目的。每个着色器使用这两个关键字设定输入和输出，只要一个输出变量与下一个着色器阶段的输入匹配，它就会传递下去。但在顶点和片段着色器中会有点不同。</p>
+<p>顶点着色器的输入特殊在，它从顶点数据中直接接收输入。为了定义顶点数据该如何管理，我们使用<code>location</code>这一元数据指定输入变量，这样我们才可以在CPU上配置顶点属性。顶点着色器需要为它的输入提供一个额外的<code>layout</code>标识，这样我们才能把它链接到顶点数据。这部分在之前<a href="#2D%E6%B8%B2%E6%9F%93%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">2D渲染代码实现</a>部分的例子中有用到。</p>
+<p>另一个例外是片段着色器，它需要一个<code>vec4</code>颜色输出变量，因为片段着色器需要生成一个最终输出的颜色。如果你在片段着色器没有定义输出颜色，OpenGL会把你的物体渲染为黑色（或白色）。</p>
+<p>所以，如果我们打算从一个着色器向另一个着色器发送数据，我们必须在发送方着色器中声明一个输出，在接收方着色器中声明一个类似的输入。当类型和名字都一样的时候，OpenGL就会把两个变量链接到一起，它们之间就能发送数据了（这是在链接程序对象时完成的）。</p>
+<p>顶点着色器：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> aPos; <span class="comment">// 位置变量的属性位置值为0</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> vertexColor; <span class="comment">// 为片段着色器指定一个颜色输出</span></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aPos, <span class="number">1.0</span>); <span class="comment">// 注意我们如何把一个vec3作为vec4的构造器的参数</span></span><br><span class="line">    vertexColor = <span class="type">vec4</span>(<span class="number">0.5</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">1.0</span>); <span class="comment">// 把输出变量设置为暗红色</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>片段着色器：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;</span><br><span class="line"><span class="keyword">in</span> <span class="type">vec4</span> vertexColor; <span class="comment">// 从顶点着色器传来的输入变量（名称相同、类型相同）</span></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    FragColor = vertexColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以看到我们在顶点着色器中声明了一个vertexColor变量作为vec4输出，并在片段着色器中声明了一个类似的vertexColor。由于它们名字相同且类型相同，片段着色器中的vertexColor就和顶点着色器中的vertexColor链接了。由于我们在顶点着色器中将颜色设置为深红色，最终的片段也是深红色的。</p>
+</br>
+
+<h3 id="Uniform"><a href="#Uniform" class="headerlink" title="Uniform"></a>Uniform</h3><p><code>Uniform</code>是一种从CPU中的应用向GPU中的着色器发送数据的方式，但uniform和顶点属性有些不同。首先，<code>uniform</code>是全局的(Global)。全局意味着<code>uniform</code>变量必须在每个着色器程序对象中都是独一无二的，而且它可以被着色器程序的任意着色器在任意阶段访问。第二，无论你把<code>uniform</code>值设置成什么，<code>uniform</code>会一直保存它们的数据，直到它们被重置或更新。</p>
+<p>我们可以在一个着色器中添加<code>uniform</code>关键字至类型和变量名前来声明一个GLSL的<code>uniform</code>。从此处开始我们就可以在着色器中使用新声明的<code>uniform</code>了。我们来看看这次是否能通过<code>uniform</code>设置三角形的颜色：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec4</span> FragColor;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">vec4</span> ourColor; <span class="comment">// 在OpenGL程序代码中设定这个变量</span></span><br><span class="line"><span class="type">void</span> main()&#123;</span><br><span class="line">    FragColor = ourColor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果你声明了一个uniform却在GLSL代码中没用过，编译器会静默移除这个变量，导致最后编译出的版本中并不会包含它，这可能导致几个非常麻烦的错误，记住这点！</li>
+</ul>
+<p>然后，在程序中给这个变量赋值：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> timeValue = glfwGetTime();</span><br><span class="line"><span class="keyword">float</span> greenValue = (<span class="built_in">sin</span>(timeValue) / <span class="number">2.0f</span>) + <span class="number">0.5f</span>; <span class="comment">// 颜色随时间变化</span></span><br><span class="line"><span class="keyword">int</span> vertexColorLocation = glGetUniformLocation(shaderProgram, <span class="string">&quot;ourColor&quot;</span>); <span class="comment">// 找到这个uniform的地址，返回-1就是没找到</span></span><br><span class="line">glUseProgram(shaderProgram); <span class="comment">// 必须先使用这个着色器程序才能赋值</span></span><br><span class="line">glUniform4f(vertexColorLocation, <span class="number">0.0f</span>, greenValue, <span class="number">0.0f</span>, <span class="number">1.0f</span>); <span class="comment">// 赋值</span></span><br></pre></td></tr></table></figure>
+<p><code>glUniform4f</code>函数的后缀4f表示接受的数据类型。部分后缀举例如下：<br>| 后缀 | 数据类型 |<br>| —- | —- |<br>| f | 函数需要一个float作为它的值 |<br>| i | 函数需要一个int作为它的值 |<br>| ui | 函数需要一个uint作为它的值 |<br>| 3f | 函数需要3个float作为它的值 |<br>| fv | 函数需要一个float向量/数组作为它的值 |</p>
+</br>
+
+<p>如果我们打算让颜色慢慢变化，我们就要在游戏循环的每一次迭代中（所以他会逐帧改变）更新这个<code>uniform</code>，否则三角形就不会改变颜色。我们计算<code>greenValue</code>，然后每个渲染迭代都更新这个<code>uniform</code>即可。</p>
+</br>
+
+<h3 id="更多顶点属性"><a href="#更多顶点属性" class="headerlink" title="更多顶点属性"></a>更多顶点属性</h3><p>程序中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> vertices[] = &#123;</span><br><span class="line">    <span class="comment">// 位置              // 颜色</span></span><br><span class="line">     <span class="number">0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="number">1.0f</span>, <span class="number">0.0f</span>, <span class="number">0.0f</span>,   <span class="comment">// 右下</span></span><br><span class="line">    <span class="number">-0.5f</span>, <span class="number">-0.5f</span>, <span class="number">0.0f</span>,  <span class="number">0.0f</span>, <span class="number">1.0f</span>, <span class="number">0.0f</span>,   <span class="comment">// 左下</span></span><br><span class="line">     <span class="number">0.0f</span>,  <span class="number">0.5f</span>, <span class="number">0.0f</span>,  <span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>    <span class="comment">// 顶部</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 配置位置属性</span></span><br><span class="line">glVertexAttribPointer(<span class="number">0</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">6</span> * <span class="keyword">sizeof</span>(<span class="keyword">float</span>), (<span class="keyword">void</span>*)<span class="number">0</span>);</span><br><span class="line">glEnableVertexAttribArray(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 配置颜色属性</span></span><br><span class="line">glVertexAttribPointer(<span class="number">1</span>, <span class="number">3</span>, GL_FLOAT, GL_FALSE, <span class="number">6</span> * <span class="keyword">sizeof</span>(<span class="keyword">float</span>), (<span class="keyword">void</span>*)(<span class="number">3</span>* <span class="keyword">sizeof</span>(<span class="keyword">float</span>))); <span class="comment">// 注意，起始地址偏移量不再是0</span></span><br><span class="line">glEnableVertexAttribArray(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>顶点着色器：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">in</span> <span class="type">vec3</span> aPos;   <span class="comment">// 位置变量的属性位置值为 0 </span></span><br><span class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">in</span> <span class="type">vec3</span> aColor; <span class="comment">// 颜色变量的属性位置值为 1</span></span><br><span class="line"><span class="keyword">out</span> <span class="type">vec3</span> ourColor; <span class="comment">// 向片段着色器输出一个颜色</span></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = <span class="type">vec4</span>(aPos, <span class="number">1.0</span>);</span><br><span class="line">    ourColor = aColor; <span class="comment">// 将ourColor设置为我们从顶点数据那里得到的输入颜色</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>片段着色器：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#version 330 core</span></span><br><span class="line">out vec4 FragColor;  </span><br><span class="line">in vec3 ourColor;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    FragColor = vec4(ourColor, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然我们只指定了三个顶点的颜色，OpenGL将会自动以插值的形式计算出其他位置的颜色。效果如下：</p>
+<p><img src="https://i.loli.net/2021/02/22/jZxavHK1uEQIXsT.png"></p>
+</br>
+
+<h3 id="自己的着色器类"><a href="#自己的着色器类" class="headerlink" title="自己的着色器类"></a>自己的着色器类</h3><p>上述着色器的相关操作非常繁琐，管理也很麻烦，我们自己最好完成一个类来对一些常用操作进行封装。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shader</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 程序ID</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> ID;</span><br><span class="line">    <span class="comment">// 构造器读取并构建着色器</span></span><br><span class="line">    Shader(<span class="keyword">const</span> GLchar* vertexPath, <span class="keyword">const</span> GLchar* fragmentPath, <span class="keyword">const</span> <span class="keyword">char</span>* geometryPath = <span class="literal">nullptr</span>);</span><br><span class="line">    <span class="comment">// 使用/激活程序</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">use</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// uniform工具函数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setBool</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;name, <span class="keyword">bool</span> value)</span> <span class="keyword">const</span></span>;  </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setInt</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;name, <span class="keyword">int</span> value)</span> <span class="keyword">const</span></span>;   </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setFloat</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;name, <span class="keyword">float</span> value)</span> <span class="keyword">const</span></span>;</span><br><span class="line">	...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Shader(<span class="keyword">const</span> <span class="keyword">char</span>* vertexPath, <span class="keyword">const</span> <span class="keyword">char</span>* fragmentPath, <span class="keyword">const</span> <span class="keyword">char</span>* geometryPath = <span class="literal">nullptr</span>) &#123; <span class="comment">// 可选的几何着色器</span></span><br><span class="line">	... <span class="comment">// 从文件路径读入</span></span><br><span class="line">	... <span class="comment">// 创建、编译、查错、链接等步骤</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 给uniform赋值的写法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setVec4</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span>&amp; name, <span class="keyword">float</span> x, <span class="keyword">float</span> y, <span class="keyword">float</span> z, <span class="keyword">float</span> w)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">	glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setVec4</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span>&amp; name, glm::vec4 value)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">	glUniform4fv(glGetUniformLocation(ID, name.c_str()), <span class="number">1</span>, &amp;value[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setMat4</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span>&amp; name, glm::mat4 value)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), <span class="number">1</span>, GL_FALSE, &amp;value[<span class="number">0</span>][<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line"></span><br></pre></td></tr></table></figure>
       
 
       
