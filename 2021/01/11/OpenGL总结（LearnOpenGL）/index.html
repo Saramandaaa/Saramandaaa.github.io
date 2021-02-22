@@ -23,7 +23,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/13/zIBpiYXFW9d8qhT.png">
 <meta property="og:image" content="https://i.loli.net/2021/02/22/jZxavHK1uEQIXsT.png">
 <meta property="article:published_time" content="2021-01-11T09:24:31.000Z">
-<meta property="article:modified_time" content="2021-02-22T09:17:58.879Z">
+<meta property="article:modified_time" content="2021-02-22T09:22:50.875Z">
 <meta property="article:author" content="Saramandaaa">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="OpenGL">
@@ -471,8 +471,6 @@
 <td>盒纹理</td>
 </tr>
 </tbody></table>
-</br>
-
 <p>同样，可以在GLSL中使用数组和结构体（与C语言类似），但是数组仅支持一维。</p>
 <p>一个向量的分量可以通过<code>vec.x</code>这种方式获取，这里<code>x</code>是指这个向量的第一个分量。你可以分别使用<code>.x</code>、<code>.y</code>、<code>.z</code>和<code>.w</code>来获取它们的第1、2、3、4个分量。GLSL也允许你对颜色使用<code>rgba</code>，或是对纹理坐标使用<code>stpq</code>访问相同的分量。</p>
 <p>向量这一数据类型也允许一些有趣而灵活的分量选择方式，叫做重组(Swizzling)。同样也可以灵活使用构造函数。GLSL允许这样的语法：</p>
@@ -498,9 +496,35 @@
 </ul>
 <p>然后，在程序中给这个变量赋值：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> timeValue = glfwGetTime();</span><br><span class="line"><span class="keyword">float</span> greenValue = (<span class="built_in">sin</span>(timeValue) / <span class="number">2.0f</span>) + <span class="number">0.5f</span>; <span class="comment">// 颜色随时间变化</span></span><br><span class="line"><span class="keyword">int</span> vertexColorLocation = glGetUniformLocation(shaderProgram, <span class="string">&quot;ourColor&quot;</span>); <span class="comment">// 找到这个uniform的地址，返回-1就是没找到</span></span><br><span class="line">glUseProgram(shaderProgram); <span class="comment">// 必须先使用这个着色器程序才能赋值</span></span><br><span class="line">glUniform4f(vertexColorLocation, <span class="number">0.0f</span>, greenValue, <span class="number">0.0f</span>, <span class="number">1.0f</span>); <span class="comment">// 赋值</span></span><br></pre></td></tr></table></figure>
-<p><code>glUniform4f</code>函数的后缀4f表示接受的数据类型。部分后缀举例如下：<br>| 后缀 | 数据类型 |<br>| —- | —- |<br>| f | 函数需要一个float作为它的值 |<br>| i | 函数需要一个int作为它的值 |<br>| ui | 函数需要一个uint作为它的值 |<br>| 3f | 函数需要3个float作为它的值 |<br>| fv | 函数需要一个float向量/数组作为它的值 |</p>
-</br>
-
+<p><code>glUniform4f</code>函数的后缀4f表示接受的数据类型。部分后缀举例如下：</p>
+<table>
+<thead>
+<tr>
+<th>后缀</th>
+<th>数据类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>f</td>
+<td>函数需要一个float作为它的值</td>
+</tr>
+<tr>
+<td>i</td>
+<td>函数需要一个int作为它的值</td>
+</tr>
+<tr>
+<td>ui</td>
+<td>函数需要一个uint作为它的值</td>
+</tr>
+<tr>
+<td>3f</td>
+<td>函数需要3个float作为它的值</td>
+</tr>
+<tr>
+<td>fv</td>
+<td>函数需要一个float向量/数组作为它的值</td>
+</tr>
+</tbody></table>
 <p>如果我们打算让颜色慢慢变化，我们就要在游戏循环的每一次迭代中（所以他会逐帧改变）更新这个<code>uniform</code>，否则三角形就不会改变颜色。我们计算<code>greenValue</code>，然后每个渲染迭代都更新这个<code>uniform</code>即可。</p>
 </br>
 
